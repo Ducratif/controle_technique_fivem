@@ -19,4 +19,4 @@ Ressource ESX Legacy compatible **ox_lib + ox_inventory**.
 5) `ensure ducratif_ct`
 
 ## Docs
-Ouvre `ducratif_ct/docs/index.html`
+[`ducratif_ct/docs/`](https://ducratif.github.io/controle_technique_fivem/)
