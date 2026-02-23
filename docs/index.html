@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>ducratif_ct — Documentation</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <header>
+    <div class="container header-row">
+      <div class="header-left">
+        <span class="badge">ducratif_ct • ESX Legacy • ox_lib • ox_inventory</span>
+        <h1>Contrôle Technique & Carte Grise RP</h1>
+        <p class="lead">
+          Ressource FiveM prête à <b>ensure</b> : CT (7/14/30 jours), papier CT (metadata ox_inventory),
+          scan police (200m), menu contrôle complet + amende automatique, logs complets (CT + police).
+        </p>
+      </div>
+    
+      <a class="discord-btn" href="https://discord.gg/kpD8pQBBWm" target="_blank" rel="noopener noreferrer">
+        Rejoindre le Discord
+      </a>
+    </div>
+  </header>
+
+
+  <main>
+    <div class="container">
+      <div class="grid">
+        <section class="card half">
+          <h2>Installation rapide</h2>
+          <div class="callouts">
+            <div class="callout ok"><b>1)</b> Import SQL : <code>sql/install.sql</code></div>
+            <div class="callout ok"><b>2)</b> Dépose <code>ducratif_ct</code> dans tes resources</div>
+            <div class="callout ok"><b>3)</b> Configure <code>config.lua</code></div>
+            <div class="callout warn"><b>4)</b> Ajoute les items ox_inventory (snippet ci-dessous)</div>
+            <div class="callout ok"><b>5)</b> <code>ensure ducratif_ct</code></div>
+          </div>
+        </section>
+
+        <section class="card half">
+          <h2>Dépendances</h2>
+          <ul>
+            <li><b>es_extended</b> (ESX Legacy)</li>
+            <li><b>ox_lib</b> (menus/context/notify)</li>
+            <li><b>ox_inventory</b> (items + metadata)</li>
+            <li><b>oxmysql</b> (requêtes DB)</li>
+          </ul>
+          <hr/>
+          <small>Note : les items doivent exister dans <code>ox_inventory/data/items.lua</code> (ox_inventory ne charge pas d’items depuis une ressource externe).</small>
+        </section>
+
+        <section class="card">
+          <h2>Config essentielle</h2>
+          <div class="kv">
+            <div><b>UseNPC</b> : <code>true</code> (NPC/marker, public) / <code>false</code> (métier CT)</div>
+            <div><b>CTDurations</b> : 7 / 14 / 30 jours (modifiables)</div>
+            <div><b>BasePriceByClass</b> : prix CT par classe GTA</div>
+            <div><b>Fines</b> : amende auto (base par classe + par jour de retard)</div>
+            <div><b>Police.scannerRange</b> : portée du scanner (défaut 200m)</div>
+          </div>
+        </section>
+
+        <section class="card half">
+          <h2>Items ox_inventory à ajouter</h2>
+          <p class="lead" style="margin-top:8px">Ajoute ceci dans <code>ox_inventory/data/items.lua</code> (ou ton système d’items) :</p>
+<pre><code>['ct_paper'] = {
+  label = 'Papier CT',
+  weight = 5,
+  stack = false,
+  close = true,
+  description = 'Preuve de Contrôle Technique',
+  client = { export = 'ducratif_ct.ct_paper' }
+},
+
+['ct_scanner'] = {
+  label = 'Scanner CT',
+  weight = 250,
+  stack = false,
+  close = true,
+  description = 'Scanner police (portée configurable)',
+  client = { export = 'ducratif_ct.ct_scanner' }
+},
+</code></pre>
+          <div class="callout warn"><b>Important :</b> les exports pointent vers <code>ducratif_ct</code>. Ne change pas le nom de ressource (ou adapte les exports).</div>
+        </section>
+
+        <section class="card half">
+          <h2>Fonctionnement</h2>
+          <ul>
+            <li><b>NPC mode</b> : tu vas au point CT → menu → choisis 7/14/30j → paiement auto (bank puis cash) → papier CT reçu.</li>
+            <li><b>Métier mode</b> : l’employé CT lance le menu d’inspection → coche défauts → CT validé ou refusé → logs.</li>
+            <li><b>Police</b> : utilise <code>ct_scanner</code> pour scanner un véhicule (200m).</li>
+            <li><b>Contrôle complet</b> : commande <code>/ctcontrol</code> en visant un véhicule → menu complet + bouton amende automatique (si CT expiré).</li>
+          </ul>
+        </section>
+
+        <section class="card">
+          <h2>Commandes</h2>
+          <ul>
+            <li><b>/ctcontrol</b> : police uniquement (configurable) — menu complet (vise un véhicule)</li>
+            <li><b>Métier CT</b> : évènement <code>ducratif_ct:openJobCT</code> (tu peux le bind à un marker / target / job menu)</li>
+          </ul>
+          <hr/>
+          <div class="callout">
+            Si tu veux un marker pour le métier CT, fais un petit marker job qui déclenche : <code>TriggerEvent('ducratif_ct:openJobCT')</code>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Image des items</h2>
+
+          <ul>
+            <li>Va dans <b>ox_inventory\web\images</b></li>
+            <li>Ajoute tes images dans le dossier <b>img</b> (ne change pas les noms)</li>
+          </ul>
+        
+          <div class="items-images" style="margin-top:12px">
+            <div class="item-img">
+              <img src="img/ct_paper.png" alt="ct_paper" loading="lazy">
+              <div class="item-caption"><b>ct_paper</b> → <code>ct_paper.png</code></div>
+            </div>
+          
+            <div class="item-img">
+              <img src="img/ct_scanner.png" alt="ct_scanner" loading="lazy">
+              <div class="item-caption"><b>ct_scanner</b> → <code>ct_scanner.png</code></div>
+            </div>
+          </div>
+        
+          <hr/>
+        
+          <div class="callout warn">
+            Si tu modifies les noms, il faut tout adapter : nom de l’item → image, data ox_inventory, et config du script.
+          </div>
+        </section>
+
+
+        <section class="card">
+          <h2>SQL lié au CT</h2>
+          <ul>
+            <li>Ajoute colonnes CT sur <code>owned_vehicles</code></li>
+            <li>Crée tables : <code>ct_history</code>, <code>ct_police_actions</code>, <code>ct_fines</code></li>
+          </ul>
+          <p class="lead" style="margin-top:8px">Fichier : <code>sql/install.sql</code></p>
+        </section>
+
+        <section class="card">
+          <h2>SQL lié au job</h2>
+          <ul>
+            <li>Dans <b>config.lua</b> : mets <code>Config.UseNPC = false</code> pour activer le <b>métier CT</b> (et désactiver le NPC).</li>
+            <li>Dans <b>config.lua</b> : vérifie le nom du job dans <code>Config.CTJob.name</code> (ex: <code>controletech</code>).</li>
+            <li>Ajoute le job en base via les tables <b>jobs</b> et <b>job_grades</b> (1 seul grade suffit).</li>
+            <li>Redémarre le serveur (ou ESX) puis attribue le job à un joueur (ex: <code>setjob ID controletech 0</code>).</li>
+
+          </ul>
+          <p class="lead" style="margin-top:8px">Fichier : <code>sql/job.sql</code> (crée le job rapidement !)</p>
+        </section>
+
+        <section class="card">
+          <h2>Dépannage</h2>
+          <div class="callouts">
+            <div class="callout danger"><b>“Véhicule introuvable en base”</b> : la plaque n’existe pas dans <code>owned_vehicles</code> (ou format plaque différent).</div>
+            <div class="callout warn"><b>“Accès refusé”</b> : job police/CT non conforme à la config.</div>
+            <div class="callout warn"><b>Item ne fait rien</b> : vérifier <code>client.export</code> dans <code>ox_inventory/data/items.lua</code> + nom de ressource.</div>
+            <div class="callout ok"><b>Debug</b> : active <code>Config.Debug = true</code>.</div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    ducratif_ct • Documentation • 2026 • By Ducratif
+  </footer>
+</body>
+</html>
