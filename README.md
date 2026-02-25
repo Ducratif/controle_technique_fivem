@@ -18,5 +18,8 @@ Ressource ESX Legacy compatible **ox_lib + ox_inventory**.
 4) Configurer `config.lua`
 5) `ensure ducratif_ct`
 
+## 🎥 Vidéo de présentation
+[![Voir la vidéo](https://img.youtube.com/vi/PdI6hQnFRYs/maxresdefault.jpg)](https://youtu.be/PdI6hQnFRYs)
+
 ## Docs
 [`ducratif_ct/docs/`](https://ducratif.github.io/controle_technique_fivem/)
